@@ -22,10 +22,7 @@ router.post(
     check(
       'password',
       'Salasanan on oltava vähintään KUUSI merkkiä pitkä'
-    ).isLength({ min: 6 }),
-    check('relationship', 'Sivilisääty vaaditaan')
-      .not()
-      .isEmpty()
+    ).isLength({ min: 6 })
   ],
   async (req, res) => {
     // TEST: console.log(req.body);
@@ -35,7 +32,7 @@ router.post(
     }
 
     // Deconstrutoidaan
-    const { name, email, password, relationship } = req.body;
+    const { name, email, password } = req.body;
 
     try {
       // ONKO KÄYTTÄJÄ JO OLEMASSA?
@@ -58,8 +55,7 @@ router.post(
         name,
         email,
         password,
-        avatar,
-        relationship
+        avatar
       });
 
       // CRYPTAA SALASANA

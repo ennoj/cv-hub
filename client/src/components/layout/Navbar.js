@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { logout } from '../../actions/auth';
 
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -28,8 +31,37 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Navbar = () => {
+const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   const classes = useStyles();
+
+  const authLinks = (
+    <Fragment>
+      <Button className={classes.logButton} color='inherit'>
+        <Link onClick={logout} className={classes.link} to='#!'>
+          Kirjaudu Ulos
+        </Link>
+      </Button>
+    </Fragment>
+  );
+  const guestLinks = (
+    <Fragment>
+      <Button className={classes.logButton} color='inherit'>
+        <Link className={classes.link} to='/users'>
+          Käyttäjät
+        </Link>
+      </Button>
+      <Button className={classes.logButton} color='inherit'>
+        <Link className={classes.link} to='/register'>
+          Rekisteröidy
+        </Link>
+      </Button>
+      <Button className={classes.logButton} color='inherit'>
+        <Link className={classes.link} to='/login'>
+          Kirjaudu Sisään
+        </Link>
+      </Button>
+    </Fragment>
+  );
 
   return (
     <div className={classes.root}>
@@ -48,20 +80,25 @@ const Navbar = () => {
               verkkoCV
             </Link>
           </Typography>
-          <Button className={classes.logButton} color='inherit'>
-            <Link className={classes.link} to='/register'>
-              Rekisteröidy
-            </Link>
-          </Button>
-          <Button className={classes.logButton} color='inherit'>
-            <Link className={classes.link} to='/login'>
-              Kirjaudu Sisään
-            </Link>
-          </Button>
+          {!loading && (
+            <Fragment>{isAuthenticated ? authLinks : guestLinks}</Fragment>
+          )}
         </Toolbar>
       </AppBar>
     </div>
   );
 };
 
-export default Navbar;
+Navbar.propTypes = {
+  logout: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default connect(
+  mapStateToProps,
+  { logout }
+)(Navbar);

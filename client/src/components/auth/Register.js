@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Link, Redirect } from 'react-router-dom';
+import { setAlert } from '../../actions/alert';
+import { register } from '../../actions/auth';
+import PropTypes from 'prop-types';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -7,8 +11,6 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 
-import clsx from 'clsx';
-import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 
 const useStyles = makeStyles(theme => ({
@@ -19,7 +21,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Register = () => {
+const Register = ({ setAlert, register, isAuthenticated }) => {
   const classes = useStyles();
 
   const [formData, setFormData] = useState({
@@ -34,14 +36,18 @@ const Register = () => {
   const onChange = e =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const onSubmit = e => {
+  const onSubmit = async e => {
     e.preventDefault();
     if (password !== password2) {
-      console.log('Salasanat eivät täsmää');
+      setAlert('Salasanat eivät täsmää', 'danger');
     } else {
-      console.log(formData);
+      register({ name, email, password });
     }
   };
+
+  if (isAuthenticated) {
+    return <Redirect to='/dashboard' />;
+  }
 
   return (
     <Grid
@@ -83,7 +89,7 @@ const Register = () => {
             type='password'
             autoComplete='current-password'
             margin='normal'
-            required
+            minLength='6'
           />
           <br />
           <TextField
@@ -95,11 +101,16 @@ const Register = () => {
             type='password'
             autoComplete='current-password'
             margin='normal'
-            required
+            minLength='6'
           />
           <br />
           <br />
-          <Button type='submit' className={classes.button} color='inherit'>
+          <Button
+            type='submit'
+            value='Register'
+            className={classes.button}
+            color='inherit'
+          >
             Rekisteröidy
           </Button>
         </form>
@@ -116,4 +127,18 @@ const Register = () => {
   );
 };
 
-export default Register;
+Register.propTypes = {
+  setAlert: PropTypes.func.isRequired,
+  register: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool
+};
+
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+// connectin sulkuihin: 1: statet jotka haluat mapata. 2: objekti jonka actioneita haluat käyttää
+export default connect(
+  mapStateToProps,
+  { setAlert, register }
+)(Register);

@@ -116,11 +116,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
         </form>
 
         <Typography variant='subtitle2'>
-          Onko sinulla jo tili?{' '}
-          <Link className={classes.link} to='/login'>
-            Kirjaudu sisään
-          </Link>
-          .
+          Onko sinulla jo tili? <Link to='/login'>Kirjaudu sisään</Link>.
         </Typography>
       </Box>
     </Grid>

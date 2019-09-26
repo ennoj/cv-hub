@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { getCurrentProfile } from '../../actions/profile';
 
 import Spinner from '../layout/Spinner';
+import DashboardActions from './DashboardActions';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -42,7 +43,7 @@ const Dashboard = ({
       <Typography variant='h6'>Tervetuloa, {user && user.name}</Typography>
 
       {profile !== null ? (
-        <Fragment>lol</Fragment>
+        <DashboardActions />
       ) : (
         <Fragment>
           <Typography variant='subtitle1'>

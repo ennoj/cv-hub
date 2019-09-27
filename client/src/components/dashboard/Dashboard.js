@@ -2,10 +2,12 @@ import React, { useEffect, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { getCurrentProfile } from '../../actions/profile';
+import { getCurrentProfile, deleteAccount } from '../../actions/profile';
 
 import Spinner from '../layout/Spinner';
 import DashboardActions from './DashboardActions';
+import Experience from './Experience';
+import Education from './Education';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -25,6 +27,7 @@ const useStyles = makeStyles(theme => ({
 
 const Dashboard = ({
   getCurrentProfile,
+  deleteAccount,
   auth: { user },
   profile: { profile, loading }
 }) => {
@@ -43,7 +46,17 @@ const Dashboard = ({
       <Typography variant='h6'>Tervetuloa, {user && user.name}</Typography>
 
       {profile !== null ? (
-        <DashboardActions />
+        <Fragment>
+          <DashboardActions />
+          <Experience experience={profile.experience} />
+          <Education education={profile.education} />
+
+          <div>
+            <button onClick={() => deleteAccount()}>
+              Poista profiili ja tunnus
+            </button>
+          </div>
+        </Fragment>
       ) : (
         <Fragment>
           <Typography variant='subtitle1'>
@@ -62,6 +75,7 @@ const Dashboard = ({
 
 Dashboard.propTypes = {
   getCurrentProfile: PropTypes.func.isRequired,
+  deleteAccount: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired
 };
@@ -73,5 +87,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getCurrentProfile }
+  { getCurrentProfile, deleteAccount }
 )(Dashboard);

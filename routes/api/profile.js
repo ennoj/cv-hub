@@ -7,6 +7,7 @@ const { check, validationResult } = require('express-validator');
 
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
+const Post = require('../../models/Post');
 
 // ROUTE: GET api/profile/me
 // KUVAUS: Hae käyttäjän profiili
@@ -147,6 +148,8 @@ router.get('/user/:user_id', async (req, res) => {
 // YKSITYISYYS: YKSITYINEN
 router.delete('/', auth, async (req, res) => {
   try {
+    // Poista tilapäivitykset
+    await Post.deleteMany({ user: req.user.id });
     // Poista profiili
     await Profile.findOneAndRemove({ user: req.user.id });
     // Poista käyttäjä

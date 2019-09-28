@@ -37,6 +37,11 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   const authLinks = (
     <Fragment>
       <Button className={classes.logButton} color='inherit'>
+        <Link className={classes.link} to='/profiles'>
+          Käyttäjät
+        </Link>
+      </Button>
+      <Button className={classes.logButton} color='inherit'>
         <Link className={classes.link} to='/dashboard'>
           Ohjauspaneeli
         </Link>
@@ -51,7 +56,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   const guestLinks = (
     <Fragment>
       <Button className={classes.logButton} color='inherit'>
-        <Link className={classes.link} to='/users'>
+        <Link className={classes.link} to='/profiles'>
           Käyttäjät
         </Link>
       </Button>
